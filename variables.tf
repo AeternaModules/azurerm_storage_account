@@ -137,27 +137,27 @@ EOT
     location                          = string
     name                              = string
     resource_group_name               = string
-    shared_access_key_enabled         = optional(bool, true)
-    sftp_enabled                      = optional(bool, false)
-    queue_encryption_key_type         = optional(string, "Service")
-    public_network_access_enabled     = optional(bool, true)
+    shared_access_key_enabled         = optional(bool)   # Default: true
+    sftp_enabled                      = optional(bool)   # Default: false
+    queue_encryption_key_type         = optional(string) # Default: "Service"
+    public_network_access_enabled     = optional(bool)   # Default: true
     provisioned_billing_model_version = optional(string)
-    nfsv3_enabled                     = optional(bool, false)
-    min_tls_version                   = optional(string, "TLS1_2")
-    local_user_enabled                = optional(bool, true)
+    nfsv3_enabled                     = optional(bool)   # Default: false
+    min_tls_version                   = optional(string) # Default: "TLS1_2"
+    local_user_enabled                = optional(bool)   # Default: true
     large_file_share_enabled          = optional(bool)
-    is_hns_enabled                    = optional(bool, false)
-    https_traffic_only_enabled        = optional(bool, true)
-    table_encryption_key_type         = optional(string, "Service")
+    is_hns_enabled                    = optional(bool)   # Default: false
+    https_traffic_only_enabled        = optional(bool)   # Default: true
+    table_encryption_key_type         = optional(string) # Default: "Service"
     edge_zone                         = optional(string)
-    dns_endpoint_type                 = optional(string, "Standard")
-    default_to_oauth_authentication   = optional(bool, false)
-    cross_tenant_replication_enabled  = optional(bool, false)
+    dns_endpoint_type                 = optional(string) # Default: "Standard"
+    default_to_oauth_authentication   = optional(bool)   # Default: false
+    cross_tenant_replication_enabled  = optional(bool)   # Default: false
     allowed_copy_scope                = optional(string)
-    allow_nested_items_to_be_public   = optional(bool, true)
-    account_kind                      = optional(string, "StorageV2")
+    allow_nested_items_to_be_public   = optional(bool)   # Default: true
+    account_kind                      = optional(string) # Default: "StorageV2"
     access_tier                       = optional(string)
-    infrastructure_encryption_enabled = optional(bool, false)
+    infrastructure_encryption_enabled = optional(bool) # Default: false
     tags                              = optional(map(string))
     azure_files_authentication = optional(object({
       active_directory = optional(object({
@@ -168,14 +168,14 @@ EOT
         netbios_domain_name = optional(string)
         storage_sid         = optional(string)
       }))
-      default_share_level_permission = optional(string, "None")
+      default_share_level_permission = optional(string) # Default: "None"
       directory_type                 = string
     }))
     blob_properties = optional(object({
-      change_feed_enabled           = optional(bool, false)
+      change_feed_enabled           = optional(bool) # Default: false
       change_feed_retention_in_days = optional(number)
       container_delete_retention_policy = optional(object({
-        days = optional(number, 7)
+        days = optional(number) # Default: 7
       }))
       cors_rule = optional(list(object({
         allowed_headers    = list(string)
@@ -186,18 +186,18 @@ EOT
       })))
       default_service_version = optional(string)
       delete_retention_policy = optional(object({
-        days                     = optional(number, 7)
-        permanent_delete_enabled = optional(bool, false)
+        days                     = optional(number) # Default: 7
+        permanent_delete_enabled = optional(bool)   # Default: false
       }))
-      last_access_time_enabled = optional(bool, false)
+      last_access_time_enabled = optional(bool) # Default: false
       restore_policy = optional(object({
         days = number
       }))
-      versioning_enabled = optional(bool, false)
+      versioning_enabled = optional(bool) # Default: false
     }))
     custom_domain = optional(object({
       name          = string
-      use_subdomain = optional(bool, false)
+      use_subdomain = optional(bool) # Default: false
     }))
     customer_managed_key = optional(object({
       key_vault_key_id          = optional(string)
@@ -252,12 +252,12 @@ EOT
       }))
     }))
     routing = optional(object({
-      choice                      = optional(string, "MicrosoftRouting")
-      publish_internet_endpoints  = optional(bool, false)
-      publish_microsoft_endpoints = optional(bool, false)
+      choice                      = optional(string) # Default: "MicrosoftRouting"
+      publish_internet_endpoints  = optional(bool)   # Default: false
+      publish_microsoft_endpoints = optional(bool)   # Default: false
     }))
     sas_policy = optional(object({
-      expiration_action = optional(string, "Log")
+      expiration_action = optional(string) # Default: "Log"
       expiration_period = string
     }))
     share_properties = optional(object({
@@ -269,13 +269,13 @@ EOT
         max_age_in_seconds = number
       })))
       retention_policy = optional(object({
-        days = optional(number, 7)
+        days = optional(number) # Default: 7
       }))
       smb = optional(object({
         authentication_types            = optional(set(string))
         channel_encryption_type         = optional(set(string))
         kerberos_ticket_encryption_type = optional(set(string))
-        multichannel_enabled            = optional(bool, false)
+        multichannel_enabled            = optional(bool) # Default: false
         versions                        = optional(set(string))
       }))
     }))
