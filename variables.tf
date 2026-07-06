@@ -308,5 +308,315 @@ EOT
     ])
     error_message = "Each cors_rule list must contain at most 5 items"
   }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.provisioned_billing_model_version == null || (contains(["V2"], v.provisioned_billing_model_version))
+      )
+    ])
+    error_message = "must be one of: V2"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        contains(["LRS", "ZRS", "GRS", "RAGRS", "GZRS", "RAGZRS"], v.account_replication_type)
+      )
+    ])
+    error_message = "must be one of: LRS, ZRS, GRS, RAGRS, GZRS, RAGZRS"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.azure_files_authentication == null || (v.azure_files_authentication.active_directory == null || (can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", v.azure_files_authentication.active_directory.domain_guid))))
+      )
+    ])
+    error_message = "must be a valid UUID"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.azure_files_authentication == null || (v.azure_files_authentication.active_directory == null || (length(v.azure_files_authentication.active_directory.domain_name) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.azure_files_authentication == null || (v.azure_files_authentication.active_directory == null || (v.azure_files_authentication.active_directory.storage_sid == null || (length(v.azure_files_authentication.active_directory.storage_sid) > 0)))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.azure_files_authentication == null || (v.azure_files_authentication.active_directory == null || (v.azure_files_authentication.active_directory.domain_sid == null || (length(v.azure_files_authentication.active_directory.domain_sid) > 0)))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.azure_files_authentication == null || (v.azure_files_authentication.active_directory == null || (v.azure_files_authentication.active_directory.forest_name == null || (length(v.azure_files_authentication.active_directory.forest_name) > 0)))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.azure_files_authentication == null || (v.azure_files_authentication.active_directory == null || (v.azure_files_authentication.active_directory.netbios_domain_name == null || (length(v.azure_files_authentication.active_directory.netbios_domain_name) > 0)))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.edge_zone == null || (length(v.edge_zone) > 0)
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.network_rules == null || (v.network_rules.private_link_access == null || (v.network_rules.private_link_access.endpoint_tenant_id == null || (can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", v.network_rules.private_link_access.endpoint_tenant_id)))))
+      )
+    ])
+    error_message = "must be a valid UUID"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.blob_properties == null || (v.blob_properties.change_feed_retention_in_days == null || (v.blob_properties.change_feed_retention_in_days >= 1 && v.blob_properties.change_feed_retention_in_days <= 146000))
+      )
+    ])
+    error_message = "must be between 1 and 146000"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.blob_properties == null || (v.blob_properties.container_delete_retention_policy == null || (v.blob_properties.container_delete_retention_policy.days == null || (v.blob_properties.container_delete_retention_policy.days >= 1 && v.blob_properties.container_delete_retention_policy.days <= 365)))
+      )
+    ])
+    error_message = "must be between 1 and 365"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.blob_properties == null || (v.blob_properties.delete_retention_policy == null || (v.blob_properties.delete_retention_policy.days == null || (v.blob_properties.delete_retention_policy.days >= 1 && v.blob_properties.delete_retention_policy.days <= 365)))
+      )
+    ])
+    error_message = "must be between 1 and 365"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.blob_properties == null || (v.blob_properties.restore_policy == null || (v.blob_properties.restore_policy.days >= 1 && v.blob_properties.restore_policy.days <= 365))
+      )
+    ])
+    error_message = "must be between 1 and 365"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.share_properties == null || (v.share_properties.retention_policy == null || (v.share_properties.retention_policy.days == null || (v.share_properties.retention_policy.days >= 1 && v.share_properties.retention_policy.days <= 365)))
+      )
+    ])
+    error_message = "must be between 1 and 365"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.share_properties == null || (v.share_properties.smb == null || (v.share_properties.smb.authentication_types == null || (contains(["Kerberos", "NTLMv2"], v.share_properties.smb.authentication_types))))
+      )
+    ])
+    error_message = "must be one of: Kerberos, NTLMv2"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.share_properties == null || (v.share_properties.smb == null || (v.share_properties.smb.channel_encryption_type == null || (contains(["AES-128-CCM", "AES-128-GCM", "AES-256-GCM"], v.share_properties.smb.channel_encryption_type))))
+      )
+    ])
+    error_message = "must be one of: AES-128-CCM, AES-128-GCM, AES-256-GCM"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.share_properties == null || (v.share_properties.smb == null || (v.share_properties.smb.kerberos_ticket_encryption_type == null || (contains(["AES-256", "RC4-HMAC"], v.share_properties.smb.kerberos_ticket_encryption_type))))
+      )
+    ])
+    error_message = "must be one of: AES-256, RC4-HMAC"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.share_properties == null || (v.share_properties.smb == null || (v.share_properties.smb.versions == null || (contains(["SMB2.1", "SMB3.0", "SMB3.1.1"], v.share_properties.smb.versions))))
+      )
+    ])
+    error_message = "must be one of: SMB2.1, SMB3.0, SMB3.1.1"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_accounts : (
+        v.sas_policy == null || (length(v.sas_policy.expiration_period) > 0)
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  # --- Unconfirmed validation candidates, derived from azurerm_storage_account's provider source ---
+  # Not auto-enabled: either a bespoke provider validator we can't safely translate,
+  # or a path that crosses a list-typed block (needs its own for_each wrapping).
+  # Review, translate into a real validation{} block above, and delete once confirmed.
+  # path: name
+  #   source:    [from validate.StorageAccountName] !regexp.MustCompile(`\A([a-z0-9]{3,24})\z`).MatchString(input)
+  # path: resource_group_name
+  #   condition: length(value) <= 90
+  #   message:   [from resourcegroups.ValidateName: invalid when len(value) > 90]
+  #   source:    [from resourcegroups.ValidateName: invalid when len(value) > 90]
+  # path: resource_group_name
+  #   condition: !endswith(value, ".")
+  #   message:   [from resourcegroups.ValidateName: must not end with "."]
+  #   source:    [from resourcegroups.ValidateName: must not end with "."]
+  # path: resource_group_name
+  #   condition: length(value) != 0
+  #   message:   [from resourcegroups.ValidateName: invalid when len(value) == 0]
+  #   source:    [from resourcegroups.ValidateName: invalid when len(value) == 0]
+  # path: resource_group_name
+  #   source:    [from resourcegroups.ValidateName] !matched
+  # path: location
+  #   source:    location.EnhancedValidate: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
+  # path: account_kind
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: account_tier
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: access_tier
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: azure_files_authentication.directory_type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: azure_files_authentication.default_share_level_permission
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: customer_managed_key.key_vault_key_id
+  #   source:    [from keyvault.ValidateNestedItemID] !ok
+  # path: customer_managed_key.key_vault_key_id
+  #   source:    [from keyvault.ValidateNestedItemID] err != nil
+  # path: customer_managed_key.user_assigned_identity_id
+  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
+  # path: customer_managed_key.user_assigned_identity_id
+  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
+  # path: immutability_policy.state
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: min_tls_version
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: dns_endpoint_type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: network_rules.bypass[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: network_rules.ip_rules[*]
+  #   source:    [from validate.StorageAccountIpRule] !regexp.MustCompile(`^([0-9]{1,3}\.){3}[0-9]{1,3}(/([0-9]|[1-2][0-9]|30))?$`).MatchString(value)
+  # path: network_rules.ip_rules[*]
+  #   source:    [from validate.StorageAccountIpRule] (firstIPPart == "10") || (firstIPPart == "172" && secondIPPart >= 16 && secondIPPart <= 31) || (firstIPPart == "192" && secondIPPart == 168)
+  # path: network_rules.default_action
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: network_rules.private_link_access.endpoint_resource_id
+  #   source:    [from azure.ValidateResourceID] !ok
+  # path: network_rules.private_link_access.endpoint_resource_id
+  #   source:    [from azure.ValidateResourceID] err != nil
+  # path: identity.type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: identity.identity_ids[*]
+  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
+  # path: identity.identity_ids[*]
+  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
+  # path: blob_properties.cors_rule.allowed_origins[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: blob_properties.cors_rule.allowed_methods[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: blob_properties.cors_rule.max_age_in_seconds
+  #   condition: value >= 0 && value <= 2000000000
+  #   message:   must be between 0 and 2000000000
+  # path: blob_properties.default_service_version
+  #   source:    [from validate.BlobPropertiesDefaultServiceVersion] !ok
+  # path: routing.choice
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: share_properties.cors_rule.allowed_origins[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: share_properties.cors_rule.allowed_methods[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: share_properties.cors_rule.max_age_in_seconds
+  #   condition: value >= 0 && value <= 2000000000
+  #   message:   must be between 0 and 2000000000
+  # path: queue_encryption_key_type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: table_encryption_key_type
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: sas_policy.expiration_action
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: allowed_copy_scope
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: tags
+  #   condition: length(value) <= 50
+  #   message:   [from validate.StorageAccountTags: invalid when len(value) > 50]
+  #   source:    [from validate.StorageAccountTags: invalid when len(value) > 50]
+  # path: tags
+  #   condition: length(value) <= 128
+  #   message:   [from validate.StorageAccountTags: invalid when len(value) > 128]
+  #   source:    [from validate.StorageAccountTags: invalid when len(value) > 128]
+  # path: tags
+  #   source:    [from validate.StorageAccountTags] err != nil
+  # path: tags
+  #   condition: length(value) <= 256
+  #   message:   [from validate.StorageAccountTags: invalid when len(value) > 256]
+  #   source:    [from validate.StorageAccountTags: invalid when len(value) > 256]
+  # path: error_404_document
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: index_document
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: key_vault_key_id
+  #   source:    [from keyvault.ValidateNestedItemID] !ok
+  # path: key_vault_key_id
+  #   source:    [from keyvault.ValidateNestedItemID] err != nil
+  # path: managed_hsm_key_id
+  #   source:    [from keyvault.ValidateNestedItemID] !ok
+  # path: managed_hsm_key_id
+  #   source:    [from keyvault.ValidateNestedItemID] err != nil
+  # path: user_assigned_identity_id
+  #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
+  # path: user_assigned_identity_id
+  #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
+  # path: cors_rule.allowed_origins[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: cors_rule.allowed_methods[*]
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: cors_rule.max_age_in_seconds
+  #   condition: value >= 0 && value <= 2000000000
+  #   message:   must be between 0 and 2000000000
+  # path: hour_metrics.version
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: hour_metrics.retention_policy_days
+  #   condition: value >= 1 && value <= 365
+  #   message:   must be between 1 and 365
+  # path: logging.version
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: logging.retention_policy_days
+  #   condition: value >= 1 && value <= 365
+  #   message:   must be between 1 and 365
+  # path: minute_metrics.version
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: minute_metrics.retention_policy_days
+  #   condition: value >= 1 && value <= 365
+  #   message:   must be between 1 and 365
 }
 
