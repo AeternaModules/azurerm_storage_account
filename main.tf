@@ -129,7 +129,7 @@ resource "azurerm_storage_account" "storage_accounts" {
       default_action = network_rules.value.default_action
       ip_rules       = network_rules.value.ip_rules
       dynamic "private_link_access" {
-        for_each = network_rules.value.private_link_access != null ? [network_rules.value.private_link_access] : []
+        for_each = network_rules.value.private_link_access != null ? network_rules.value.private_link_access : []
         content {
           endpoint_resource_id = private_link_access.value.endpoint_resource_id
           endpoint_tenant_id   = private_link_access.value.endpoint_tenant_id
