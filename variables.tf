@@ -287,7 +287,7 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.storage_accounts : (
-        v.blob_properties.cors_rule == null || (length(v.blob_properties.cors_rule) <= 5)
+        v.blob_properties == null || (v.blob_properties.cors_rule == null || (length(v.blob_properties.cors_rule) <= 5))
       )
     ])
     error_message = "Each cors_rule list must contain at most 5 items"
@@ -295,7 +295,7 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.storage_accounts : (
-        v.queue_properties.cors_rule == null || (length(v.queue_properties.cors_rule) <= 5)
+        v.queue_properties == null || (v.queue_properties.cors_rule == null || (length(v.queue_properties.cors_rule) <= 5))
       )
     ])
     error_message = "Each cors_rule list must contain at most 5 items"
@@ -303,7 +303,7 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.storage_accounts : (
-        v.share_properties.cors_rule == null || (length(v.share_properties.cors_rule) <= 5)
+        v.share_properties == null || (v.share_properties.cors_rule == null || (length(v.share_properties.cors_rule) <= 5))
       )
     ])
     error_message = "Each cors_rule list must contain at most 5 items"
