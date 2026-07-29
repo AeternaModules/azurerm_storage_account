@@ -100,7 +100,6 @@ resource "azurerm_storage_account" "storage_accounts" {
     for_each = each.value.customer_managed_key != null ? [each.value.customer_managed_key] : []
     content {
       key_vault_key_id          = customer_managed_key.value.key_vault_key_id
-      managed_hsm_key_id        = customer_managed_key.value.managed_hsm_key_id
       user_assigned_identity_id = customer_managed_key.value.user_assigned_identity_id
     }
   }
@@ -136,50 +135,6 @@ resource "azurerm_storage_account" "storage_accounts" {
         }
       }
       virtual_network_subnet_ids = network_rules.value.virtual_network_subnet_ids
-    }
-  }
-
-  dynamic "queue_properties" {
-    for_each = each.value.queue_properties != null ? [each.value.queue_properties] : []
-    content {
-      dynamic "cors_rule" {
-        for_each = queue_properties.value.cors_rule != null ? queue_properties.value.cors_rule : []
-        content {
-          allowed_headers    = cors_rule.value.allowed_headers
-          allowed_methods    = cors_rule.value.allowed_methods
-          allowed_origins    = cors_rule.value.allowed_origins
-          exposed_headers    = cors_rule.value.exposed_headers
-          max_age_in_seconds = cors_rule.value.max_age_in_seconds
-        }
-      }
-      dynamic "hour_metrics" {
-        for_each = queue_properties.value.hour_metrics != null ? [queue_properties.value.hour_metrics] : []
-        content {
-          enabled               = hour_metrics.value.enabled
-          include_apis          = hour_metrics.value.include_apis
-          retention_policy_days = hour_metrics.value.retention_policy_days
-          version               = hour_metrics.value.version
-        }
-      }
-      dynamic "logging" {
-        for_each = queue_properties.value.logging != null ? [queue_properties.value.logging] : []
-        content {
-          delete                = logging.value.delete
-          read                  = logging.value.read
-          retention_policy_days = logging.value.retention_policy_days
-          version               = logging.value.version
-          write                 = logging.value.write
-        }
-      }
-      dynamic "minute_metrics" {
-        for_each = queue_properties.value.minute_metrics != null ? [queue_properties.value.minute_metrics] : []
-        content {
-          enabled               = minute_metrics.value.enabled
-          include_apis          = minute_metrics.value.include_apis
-          retention_policy_days = minute_metrics.value.retention_policy_days
-          version               = minute_metrics.value.version
-        }
-      }
     }
   }
 
@@ -229,14 +184,6 @@ resource "azurerm_storage_account" "storage_accounts" {
           versions                        = smb.value.versions
         }
       }
-    }
-  }
-
-  dynamic "static_website" {
-    for_each = each.value.static_website != null ? [each.value.static_website] : []
-    content {
-      error_404_document = static_website.value.error_404_document
-      index_document     = static_website.value.index_document
     }
   }
 }

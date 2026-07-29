@@ -265,10 +265,6 @@ output "storage_accounts_queue_encryption_key_type" {
   description = "Map of queue_encryption_key_type values across all storage_accounts, keyed the same as var.storage_accounts"
   value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.queue_encryption_key_type if v.queue_encryption_key_type != null && length(v.queue_encryption_key_type) > 0 }
 }
-output "storage_accounts_queue_properties" {
-  description = "Map of queue_properties values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.queue_properties if v.queue_properties != null && length(v.queue_properties) > 0 }
-}
 output "storage_accounts_resource_group_name" {
   description = "Map of resource_group_name values across all storage_accounts, keyed the same as var.storage_accounts"
   value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.resource_group_name if v.resource_group_name != null && length(v.resource_group_name) > 0 }
@@ -439,10 +435,6 @@ output "storage_accounts_share_properties" {
 output "storage_accounts_shared_access_key_enabled" {
   description = "Map of shared_access_key_enabled values across all storage_accounts, keyed the same as var.storage_accounts"
   value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.shared_access_key_enabled if v.shared_access_key_enabled != null }
-}
-output "storage_accounts_static_website" {
-  description = "Map of static_website values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.static_website if v.static_website != null && length(v.static_website) > 0 }
 }
 output "storage_accounts_table_encryption_key_type" {
   description = "Map of table_encryption_key_type values across all storage_accounts, keyed the same as var.storage_accounts"

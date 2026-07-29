@@ -63,8 +63,7 @@ Optional:
         - name (required)
         - use_subdomain (optional)
     - customer_managed_key (block):
-        - key_vault_key_id (optional)
-        - managed_hsm_key_id (optional)
+        - key_vault_key_id (required)
         - user_assigned_identity_id (required)
     - identity (block):
         - identity_ids (optional)
@@ -81,29 +80,6 @@ Optional:
             - endpoint_resource_id (required)
             - endpoint_tenant_id (optional)
         - virtual_network_subnet_ids (optional)
-    - queue_properties (block):
-        - cors_rule (optional, block):
-            - allowed_headers (required)
-            - allowed_methods (required)
-            - allowed_origins (required)
-            - exposed_headers (required)
-            - max_age_in_seconds (required)
-        - hour_metrics (optional, block):
-            - enabled (required)
-            - include_apis (optional)
-            - retention_policy_days (optional)
-            - version (required)
-        - logging (optional, block):
-            - delete (required)
-            - read (required)
-            - retention_policy_days (optional)
-            - version (required)
-            - write (required)
-        - minute_metrics (optional, block):
-            - enabled (required)
-            - include_apis (optional)
-            - retention_policy_days (optional)
-            - version (required)
     - routing (block):
         - choice (optional)
         - publish_internet_endpoints (optional)
@@ -126,9 +102,6 @@ Optional:
             - kerberos_ticket_encryption_type (optional)
             - multichannel_enabled (optional)
             - versions (optional)
-    - static_website (block):
-        - error_404_document (optional)
-        - index_document (optional)
 EOT
 
   type = map(object({
@@ -200,8 +173,7 @@ EOT
       use_subdomain = optional(bool)
     }))
     customer_managed_key = optional(object({
-      key_vault_key_id          = optional(string)
-      managed_hsm_key_id        = optional(string)
+      key_vault_key_id          = string
       user_assigned_identity_id = string
     }))
     identity = optional(object({
@@ -222,34 +194,6 @@ EOT
         endpoint_tenant_id   = optional(string)
       })))
       virtual_network_subnet_ids = optional(set(string))
-    }))
-    queue_properties = optional(object({
-      cors_rule = optional(list(object({
-        allowed_headers    = list(string)
-        allowed_methods    = list(string)
-        allowed_origins    = list(string)
-        exposed_headers    = list(string)
-        max_age_in_seconds = number
-      })))
-      hour_metrics = optional(object({
-        enabled               = bool
-        include_apis          = optional(bool)
-        retention_policy_days = optional(number)
-        version               = string
-      }))
-      logging = optional(object({
-        delete                = bool
-        read                  = bool
-        retention_policy_days = optional(number)
-        version               = string
-        write                 = bool
-      }))
-      minute_metrics = optional(object({
-        enabled               = bool
-        include_apis          = optional(bool)
-        retention_policy_days = optional(number)
-        version               = string
-      }))
     }))
     routing = optional(object({
       choice                      = optional(string)
@@ -279,23 +223,11 @@ EOT
         versions                        = optional(set(string))
       }))
     }))
-    static_website = optional(object({
-      error_404_document = optional(string)
-      index_document     = optional(string)
-    }))
   }))
   validation {
     condition = alltrue([
       for k, v in var.storage_accounts : (
         v.blob_properties == null || (v.blob_properties.cors_rule == null || (length(v.blob_properties.cors_rule) <= 5))
-      )
-    ])
-    error_message = "Each cors_rule list must contain at most 5 items"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.storage_accounts : (
-        v.queue_properties == null || (v.queue_properties.cors_rule == null || (length(v.queue_properties.cors_rule) <= 5))
       )
     ])
     error_message = "Each cors_rule list must contain at most 5 items"
