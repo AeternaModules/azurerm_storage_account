@@ -28,11 +28,11 @@ output "storage_accounts_allowed_copy_scope" {
 }
 output "storage_accounts_azure_files_authentication" {
   description = "Map of azure_files_authentication values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.azure_files_authentication if v.azure_files_authentication != null && length(v.azure_files_authentication) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.azure_files_authentication) if v.azure_files_authentication != null && length(v.azure_files_authentication) > 0 }
 }
 output "storage_accounts_blob_properties" {
   description = "Map of blob_properties values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.blob_properties if v.blob_properties != null && length(v.blob_properties) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.blob_properties) if v.blob_properties != null && length(v.blob_properties) > 0 }
 }
 output "storage_accounts_cross_tenant_replication_enabled" {
   description = "Map of cross_tenant_replication_enabled values across all storage_accounts, keyed the same as var.storage_accounts"
@@ -40,11 +40,11 @@ output "storage_accounts_cross_tenant_replication_enabled" {
 }
 output "storage_accounts_custom_domain" {
   description = "Map of custom_domain values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.custom_domain if v.custom_domain != null && length(v.custom_domain) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.custom_domain) if v.custom_domain != null && length(v.custom_domain) > 0 }
 }
 output "storage_accounts_customer_managed_key" {
   description = "Map of customer_managed_key values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.customer_managed_key if v.customer_managed_key != null && length(v.customer_managed_key) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.customer_managed_key) if v.customer_managed_key != null && length(v.customer_managed_key) > 0 }
 }
 output "storage_accounts_default_to_oauth_authentication" {
   description = "Map of default_to_oauth_authentication values across all storage_accounts, keyed the same as var.storage_accounts"
@@ -64,11 +64,11 @@ output "storage_accounts_https_traffic_only_enabled" {
 }
 output "storage_accounts_identity" {
   description = "Map of identity values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.identity if v.identity != null && length(v.identity) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.identity) if v.identity != null && length(v.identity) > 0 }
 }
 output "storage_accounts_immutability_policy" {
   description = "Map of immutability_policy values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.immutability_policy if v.immutability_policy != null && length(v.immutability_policy) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.immutability_policy) if v.immutability_policy != null && length(v.immutability_policy) > 0 }
 }
 output "storage_accounts_infrastructure_encryption_enabled" {
   description = "Map of infrastructure_encryption_enabled values across all storage_accounts, keyed the same as var.storage_accounts"
@@ -100,7 +100,7 @@ output "storage_accounts_name" {
 }
 output "storage_accounts_network_rules" {
   description = "Map of network_rules values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.network_rules if v.network_rules != null && length(v.network_rules) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.network_rules) if v.network_rules != null && length(v.network_rules) > 0 }
 }
 output "storage_accounts_nfsv3_enabled" {
   description = "Map of nfsv3_enabled values across all storage_accounts, keyed the same as var.storage_accounts"
@@ -271,11 +271,11 @@ output "storage_accounts_resource_group_name" {
 }
 output "storage_accounts_routing" {
   description = "Map of routing values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.routing if v.routing != null && length(v.routing) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.routing) if v.routing != null && length(v.routing) > 0 }
 }
 output "storage_accounts_sas_policy" {
   description = "Map of sas_policy values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.sas_policy if v.sas_policy != null && length(v.sas_policy) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.sas_policy) if v.sas_policy != null && length(v.sas_policy) > 0 }
 }
 output "storage_accounts_secondary_access_key" {
   description = "Map of secondary_access_key values across all storage_accounts, keyed the same as var.storage_accounts"
@@ -430,7 +430,7 @@ output "storage_accounts_sftp_enabled" {
 }
 output "storage_accounts_share_properties" {
   description = "Map of share_properties values across all storage_accounts, keyed the same as var.storage_accounts"
-  value       = { for k, v in azurerm_storage_account.storage_accounts : k => v.share_properties if v.share_properties != null && length(v.share_properties) > 0 }
+  value       = { for k, v in azurerm_storage_account.storage_accounts : k => one(v.share_properties) if v.share_properties != null && length(v.share_properties) > 0 }
 }
 output "storage_accounts_shared_access_key_enabled" {
   description = "Map of shared_access_key_enabled values across all storage_accounts, keyed the same as var.storage_accounts"
